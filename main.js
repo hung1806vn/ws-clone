@@ -10,13 +10,13 @@ const wss = new WebSocketServer.Server({ port: 8080 })
 
 // Creating connection using websocket
 wss.on("connection", ws => {
-    console.log("new client connected");
+    console.log("Em iu đã kết nối");
 
     // sending message to client
-    ws.send('Welcome, you are connected!');
+    ws.send('Chào mừng tục tức của a!');
 
     var waitForUserInput = function () {
-        readline.question("Gửi message đến client: \n", function (message) {
+        readline.question("Gửi tin nhắn: \n", function (message) {
             ws.send(message);
             if (message == "exit") {
                 readline.close();
@@ -30,12 +30,12 @@ wss.on("connection", ws => {
 
     //on message from client
     ws.on("message", data => {
-        console.log(`Client has sent us: ${data} \n`)
+        console.log(`Tục tức: ${data} \n`)
     });
 
     // handling what to do when clients disconnects from server
     ws.on("close", () => {
-        console.log("the client has connected");
+        console.log("Tục tức đã kết nối");
     });
     // handling client connection error
     ws.onerror = function () {
