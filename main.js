@@ -35,7 +35,7 @@ wss.on("connection", ws => {
 
     // handling what to do when clients disconnects from server
     ws.on("close", () => {
-        console.log("Tục tức đã kết nối");
+        console.log("Tục tức đã ngắt kết nối");
     });
     // handling client connection error
     ws.onerror = function () {
