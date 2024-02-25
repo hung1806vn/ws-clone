@@ -1,46 +1,23 @@
-// Importing the required modules
-const WebSocketServer = require('ws');
-const readline = require('node:readline').createInterface({
-    input: process.stdin,
-    output: process.stdout,
-});
+import WebSocket, { WebSocketServer } from "ws";
 
-// Creating a new websocket server
-const wss = new WebSocketServer.Server({ port: 8080 })
+const wss = new WebSocketServer({ port: 8080 });
 
-// Creating connection using websocket
-wss.on("connection", ws => {
-    console.log("Em iu đã kết nối");
+wss.on("connection", function connection(ws) {
 
     // sending message to client
-    ws.send('Chào mừng tục tức của a!');
 
-    var waitForUserInput = function () {
-        readline.question("Gửi tin nhắn: \n", function (message) {
-            ws.send(message);
-            if (message == "exit") {
-                readline.close();
-            } else {
-                waitForUserInput();
-            }
-        });
-    }
+    ws.on("message", function message(message) {
+        const data = JSON.parse(message);
 
-    waitForUserInput();
-
-    //on message from client
-    ws.on("message", data => {
-        console.log(`Tục tức: ${data} \n`)
+        if (data.type === "message") {
+            wss.clients.forEach((client) => {
+                if (client !== ws && client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify({ type: "message", data: data.data }));
+                }
+            });
+        }
     });
 
-    // handling what to do when clients disconnects from server
-    ws.on("close", () => {
-        console.log("Tục tức đã ngắt kết nối");
-    });
-    // handling client connection error
-    ws.onerror = function () {
-        console.log("Some Error occurred")
-    }
 });
-console.log("The WebSocket server is running on port 8080");
 
+console.log("The WebSocket server is running on port 8080");
